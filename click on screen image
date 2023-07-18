@@ -1,10 +1,16 @@
 import cv2
 import numpy as np
 import pyautogui
+import pyscreenshot as ImageGrab
 
 def find_image_on_screen(template_path):
     # Capture a screenshot of the screen
-    screenshot = pyautogui.screenshot()
+    screenshot = ImageGrab.grab()
+
+    # Save the screenshot
+    screenshot.save('screenshot.png')
+
+    # Convert the screenshot to a numpy array
     screenshot = np.array(screenshot)
     screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
 
