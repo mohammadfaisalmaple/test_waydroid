@@ -1,0 +1,4 @@
+adb connect <IP>:5555
+
+
+
