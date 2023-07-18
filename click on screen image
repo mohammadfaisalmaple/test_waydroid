@@ -1,34 +1,36 @@
 import cv2
 import numpy as np
 import pyautogui
-import pyscreenshot as ImageGrab
 
-def find_image_on_screen(template_path):
-    # Capture a screenshot of the screen
-    screenshot = ImageGrab.grab()
-
-    # Save the screenshot
-    screenshot.save('screenshot.png')
-
-    # Convert the screenshot to a numpy array
-    screenshot = np.array(screenshot)
-    screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
+def find_image_on_screen(main_image_path, template_image_path):
+    # Load the main image
+    main_image = cv2.imread(main_image_path)
 
     # Load the template image
-    template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+    template_image = cv2.imread(template_image_path)
 
     # Perform template matching
-    result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+    result = cv2.matchTemplate(main_image, template_image, cv2.TM_CCOEFF_NORMED)
 
     # Set a threshold for the match
     threshold = 0.8
     loc = np.where(result >= threshold)
+
     if len(loc[0]) > 0:
-        # Click on the center of the matched image
-        h, w, _ = template.shape
+        # Get the dimensions of the template image
+        h, w, _ = template_image.shape
+
+        # Get the center position of the matched image
         x = loc[1][0] + w // 2
         y = loc[0][0] + h // 2
+
+        # Print the x and y position
+        print("Match found at position (x={}, y={})".format(x, y))
+
+        # Click on the center of the matched image
         pyautogui.click(x, y)
+    else:
+        print("No match found")
 
 # Example usage
-find_image_on_screen('/path/to/template.png')
+find_image_on_screen('/path/to/main_image.png', '/path/to/template_image.png')
