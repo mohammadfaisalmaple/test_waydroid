@@ -1,0 +1,28 @@
+import cv2
+import numpy as np
+import pyautogui
+
+def find_image_on_screen(template_path):
+    # Capture a screenshot of the screen
+    screenshot = pyautogui.screenshot()
+    screenshot = np.array(screenshot)
+    screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
+
+    # Load the template image
+    template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+
+    # Perform template matching
+    result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+
+    # Set a threshold for the match
+    threshold = 0.8
+    loc = np.where(result >= threshold)
+    if len(loc[0]) > 0:
+        # Click on the center of the matched image
+        h, w, _ = template.shape
+        x = loc[1][0] + w // 2
+        y = loc[0][0] + h // 2
+        pyautogui.click(x, y)
+
+# Example usage
+find_image_on_screen('/path/to/template.png')
