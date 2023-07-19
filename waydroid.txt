@@ -4,3 +4,4 @@ adb connect <IP>:5555
 
 adb shell settings put global heads_up_notifications_enabled 0
 adb shell content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:1
+shell settings put system pointer_location 1
